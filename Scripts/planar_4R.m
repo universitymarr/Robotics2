@@ -1,4 +1,4 @@
-%% 3R planar
+%% 4R planar
 clear all
 
 syms q1 q2 q3 q4
@@ -31,5 +31,3 @@ pdd=[4;2];
 Jd_4R=[-l1*cos(q1)*qd1-l2*cos(q1+q2)*(qd1+qd2)-l3*cos(q1+q2+q3)*(qd1+qd1+qd3)-l4*cos(q1+q2+q3+q4)*(qd1+qd2+qd3+qd4) -l2*cos(q1+q2)*(qd1+qd2)-l3*cos(q1+q2+q3)*(qd1+qd2+qd3)-l4*cos(q1+q2+q3+qd4)*(qd1+qd2+qd3+qd4) -l3*cos(q1+q2+q3)*(qd1+qd2+qd3)-l4*cos(q1+q2+q3+q4)*(qd1+qd2+qd3+qd4) -l4*cos(q1+q2+q3+q4)*(qd1+qd2+qd3+qd4);
       -l1*sin(q1)*qd1-l2*sin(q1+q2)*(qd1+qd2)-l3*sin(q1+q2+q3)*(qd1+qd2+qd3)-l4*sin(q1+q2+q3+q4)*(qd1+qd2+qd3+qd4) -l2*sin(q1+q2)*(qd1+qd2)-l3*sin(q1+q2+q3)*(qd1+qd2+qd3)-l4*sin(q1+q2+q3+q4)*(qd1+qd2+qd3+qd4) -l3*sin(q1+q2+q3)*(qd1+qd2+qd3)-l4*sin(q1+q2+q3+q4)*(qd1+qd2+qd3+qd4) l4*sin(q1+q2+q3+q4)*(qd1+qd2+qd3+qd4)];
 
-%% rank of jacobian
-rho = rank(J)

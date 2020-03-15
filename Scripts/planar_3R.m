@@ -21,7 +21,7 @@ J=simplify(jacobian(p,vec))
 pause
 
 %% define velocity in Cartesian Space
-pd= []; 
+pd= [1; 1]; 
 
 %% define acceleration in Cartesian Space
 pdd=[4;2];
@@ -30,5 +30,3 @@ pdd=[4;2];
 Jd_3R=[-l1*cos(q1)*qd1-l2*cos(q1+q2)*(qd1+qd2)-l3*cos(q1+q2+q3)*(qd1+qd1+qd3) -l2*cos(q1+q2)*(qd1+qd2)-l3*cos(q1+q2+q3)*(qd1+qd2+qd3) -l3*cos(q1+q2+q3)*(qd1+qd2+qd3);
       -l1*sin(q1)*qd1-l2*sin(q1+q2)*(qd1+qd2)-l3*sin(q1+q2+q3)*(qd1+qd2+qd3) -l2*sin(q1+q2)*(qd1+qd2)-l3*sin(q1+q2+q3)*(qd1+qd2+qd3) -l3*sin(q1+q2+q3)*(qd1+qd2+qd3)];
 
-%% rank of jacobian
-rho = rank(J)
