@@ -1,68 +1,75 @@
-%% dynamic model of PR planar robot under gravity
+%% dynamic model of 2R planar robot under gravity
 %% using a Lagrangian formulation in symbolic form
-%
-% A. De Luca
-% distributed on March 14, 2020
 
 clear all
 close all
 clc
 
 %% define symbolic variables
-syms m1 m2 d I2xx I2yy I2zz real  %symbolic variables explicitly defined as real
-syms q1 q2 dq1 dq2 ddq1 ddq2 u1 u2 g0 real
+syms m1 m2 real
+syms l1 l2 real
+syms dc1 dc2 real
+syms I1xx I1yy I1zz real  %symbolic variables explicitly defined as real
+syms I2xx I2yy I2zz real  %symbolic variables explicitly defined as real
+syms q1 q2 real
+syms dq1 dq2 real
+syms ddq1 ddq2 real
+syms u1 u2 g0 real
 
-disp('**** dynamic model of PR planar robot in a vertical plane ****')
+disp('**** dynamic model of 2R planar robot in a vertical plane ****')
 disp(' ')
 disp('[press return to proceed at every pause]')
 
 pause
 
 disp(' ')
-disp('*kinetic energy of link 1*')
+disp('*kinetic energy of link 1 - linear part*')
 
-%% compute kinetic energy of joint 1
-T1=(1/2)*m1*dq1^2
+%% compute linear part of kinetic energy of joint 1
+pc1 =[dc1*cos(q1) dc1*sin(q1) 0]';
+vc1 = diff(pc1,q1)*dq1;
+Tl1 = (1/2)*m1*vc1'*vc1;
 
+disp('*kinetic energy of link 1 - angular part*')
+
+%% compute the angular part of kinetic energy of joint 2
+om1 = [0 0 dq1]';
+Ta1 = (1/2)*om1'*diag([I1xx I1yy I1zz])*om1;
+
+T1= simplify(Tl1+Ta1)
 pause
 
 disp('*kinetic energy of link 2 - linear part*')
 
 %% compute the linear part of kinetic energy of joint 2
-pc2=[q1+d*cos(q2) d*sin(q2) 0]'
-vc2=diff(pc2,q1)*dq1+diff(pc2,q2)*dq2
-T2c= (1/2)*m2*vc2'*vc2
-
-pause
+pc2 = [l1*cos(q1)+dc2*cos(q2+q1) l1*sin(q1)+dc2*sin(q2+q1) 0]';
+vc2 = diff(pc2,q1)*dq1+diff(pc2,q2)*dq2;
+T2l = (1/2)*m2*vc2'*vc2;
 
 disp('*kinetic energy of link 2 - angular part*')
 
 %% compute the angular part of kinetic energy of joint 2
-om2=[0 0 dq2]'
-T2a=(1/2)*om2'*diag([I2xx I2yy I2zz])*om2
+om2=[0 0 dq2+dq1]';
+T2a=(1/2)*om2'*diag([I2xx I2yy I2zz])*om2;
 
 %% kinetic energy of joint 2
-T2=T2c+T2a;
+T2=simplify(T2l+T2a)
 pause
 
 disp('***robot kinetic energy***')
-
+    
 %% total kinetic energy
-T=T1+T2
-
-pause
+T=T1+T2;
 
 disp('*simplifying*')
-
+    
 T=simplify(T1+T2)
 pause
 
 % collect in base of term that you pass it in this case, collect terms that has dq1^2 and 
 % do the same for dq2^2 because you need them to compute M
-T=collect(T,dq1^2)
-T=collect(T,dq2^2)
-
-pause
+T=collect(T,dq1^2);
+T=collect(T,dq2^2);
 
 disp('***robot inertia matrix***')
 
