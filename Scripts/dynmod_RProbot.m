@@ -25,10 +25,10 @@ pause
 disp(' ')
 disp('*kinetic energy of link 1*')
 %% compute linear part of linear kinetic energy of joint 1
-pc1 = [dc1*cos(q1); dc1*sin(q1);0];
-vc1=diff(pc1,q1)*dq1;
-Tl1 = 1/2*m1*vc1'*vc1;
-
+% pc1 = [cos(q1); sin(q1);0];
+% vc1=diff(pc1,q1)*dq1;
+% Tl1 = 1/2*m1*vc1'*vc1;
+Tl1=0
 
 
 %% compute angular part of linear kinetic energy of joint 1
@@ -41,7 +41,7 @@ pause
 disp('*kinetic energy of link 2')
 
 %% compute the linear part of kinetic energy of joint 2
-pc2=[l1*cos(q1)-(q2-dc2)*sin(q1); l1*sin(q1)+(q2-dc2)*cos(q1); 0];
+pc2=[q2*cos(q1); q2*sin(q1); 0];
 vc2=diff(pc2,q1)*dq1+diff(pc2,q2)*dq2;
 Tl2= (1/2)*m2*vc2'*vc2;
 
@@ -110,6 +110,10 @@ pause
 
 disp('*potential energy of link 1*')
 
+%% vector gravity acceleration
+syms alpha real
+g=[0;-g0*sin(alpha);0];
+
 %% compute the potential energy of link 1
 U1=0
 
@@ -117,11 +121,8 @@ pause
 
 disp('*potential energy of link 2*')
 
-%% vector gravity acceleration
-g=[0;-g0;0];
-
 %% compute the potential energy of link 2
-U2=0
+U2=-m2*g*q2*sin(q1)
 
 pause
 
@@ -142,7 +143,7 @@ pause
 disp('***complete dynamic equations***')
 
 %% show complete dynamic equations
-M*[ddq1; ddq2]+c+G==[u1 u2]'
+M*[ddq1; ddq2]+c+G(:,2)==[u1 u2]'
 
 disp('***end***')
 

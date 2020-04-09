@@ -7,8 +7,8 @@ clc
 
 %% define symbolic variables
 syms m1 m2 real
-syms l1 l2 real
-syms dc1 dc2 real
+syms L1 L2 real
+syms d1 d2 real
 syms I1xx I1yy I1zz real  %symbolic variables explicitly defined as real
 syms I2xx I2yy I2zz real  %symbolic variables explicitly defined as real
 syms q1 q2 real
@@ -26,7 +26,7 @@ disp(' ')
 disp('*kinetic energy of link 1 - linear part*')
 
 %% compute linear part of kinetic energy of joint 1
-pc1 =[dc1*cos(q1) dc1*sin(q1) 0]';
+pc1 =[d1*cos(q1) d1*sin(q1) 0]';
 vc1 = diff(pc1,q1)*dq1;
 Tl1 = (1/2)*m1*vc1'*vc1;
 
@@ -42,14 +42,14 @@ pause
 disp('*kinetic energy of link 2 - linear part*')
 
 %% compute the linear part of kinetic energy of joint 2
-pc2 = [l1*cos(q1)+dc2*cos(q2+q1) l1*sin(q1)+dc2*sin(q2+q1) 0]';
+pc2 = [L1*cos(q1)+d2*cos(q2) L1*sin(q1)+d2*sin(q2) 0]';
 vc2 = diff(pc2,q1)*dq1+diff(pc2,q2)*dq2;
 T2l = (1/2)*m2*vc2'*vc2;
 
 disp('*kinetic energy of link 2 - angular part*')
 
 %% compute the angular part of kinetic energy of joint 2
-om2=[0 0 dq2+dq1]';
+om2=[0 0 dq2]';
 T2a=(1/2)*om2'*diag([I2xx I2yy I2zz])*om2;
 
 %% kinetic energy of joint 2
@@ -63,13 +63,13 @@ T=T1+T2;
 
 disp('*simplifying*')
     
-T=simplify(T1+T2)
-pause
+T=simplify(T1+T2);
 
 % collect in base of term that you pass it in this case, collect terms that has dq1^2 and 
 % do the same for dq2^2 because you need them to compute M
 T=collect(T,dq1^2);
-T=collect(T,dq2^2);
+T=collect(T,dq2^2)
+pause
 
 disp('***robot inertia matrix***')
 
@@ -88,6 +88,10 @@ M=simplify(M)
 
 pause
 
+%% parametrization 
+syms a1 a2 a3 a4 real
+M=[ a1 a3*cos(q1-q2);
+    a3*cos(q1-q2) a2;]
 disp('*Christoffel matrices*')
 
 %% compute the Christoffel Matrix
@@ -124,14 +128,13 @@ disp('*potential energy of link 2*')
 g=[0;-g0;0];
 
 %% compute the potential energy of link 2
-U2=-m2*g'*pc2
-
+U2=0
 pause
 
 disp('***robot potential energy (due to gravity)***')
 
 %%  total potential energy
-U=simplify(U1+U2)
+U=U1+U2
 
 pause
 

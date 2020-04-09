@@ -6,9 +6,14 @@ close all
 clc
 
 %% define symbolic variables
-syms m1 m2 d I1zz I2zz real  %symbolic variables explicitly defined as real
+syms m1 m2 real
+syms I1xx I1yy I1zz real
+syms I2xx I2yy I2zz real  %symbolic variables explicitly defined as real
 syms d1 d2 l1 l2
-syms q1 q2 dq1 dq2 ddq1 ddq2 u1 u2 g0 real
+syms q1 q2  real
+syms dq1 dq2  real 
+syms ddq1 ddq2 real 
+syms u1 u2 g0 real
 
 disp('**** dynamic model of 2R planar robot in a vertical plane ****')
 disp(' ')

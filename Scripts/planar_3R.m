@@ -1,10 +1,10 @@
 %% 3R planar
 clear all
 
-syms q1 q2 q3
-syms qd1 qd2 qd3
-%  syms l1 l2 l3
-
+syms q1 q2 q3 real
+syms dq1 dq2 dq3 real
+%syms l1 l2 l3 real
+syms l real
 
 vec =[q1 q2 q3];
 %% define length of joints
@@ -27,6 +27,6 @@ pd= [1; 1];
 pdd=[4;2];
 
 %% time derivative of the Jacobian 3R
-Jd_3R=[-l1*cos(q1)*qd1-l2*cos(q1+q2)*(qd1+qd2)-l3*cos(q1+q2+q3)*(qd1+qd1+qd3) -l2*cos(q1+q2)*(qd1+qd2)-l3*cos(q1+q2+q3)*(qd1+qd2+qd3) -l3*cos(q1+q2+q3)*(qd1+qd2+qd3);
-      -l1*sin(q1)*qd1-l2*sin(q1+q2)*(qd1+qd2)-l3*sin(q1+q2+q3)*(qd1+qd2+qd3) -l2*sin(q1+q2)*(qd1+qd2)-l3*sin(q1+q2+q3)*(qd1+qd2+qd3) -l3*sin(q1+q2+q3)*(qd1+qd2+qd3)];
+dJ_3R=[-l1*cos(q1)*dq1-l2*cos(q1+q2)*(dq1+dq2)-l3*cos(q1+q2+q3)*(dq1+dq1+dq3) -l2*cos(q1+q2)*(dq1+dq2)-l3*cos(q1+q2+q3)*(dq1+dq2+dq3) -l3*cos(q1+q2+q3)*(dq1+dq2+dq3);
+      -l1*sin(q1)*dq1-l2*sin(q1+q2)*(dq1+dq2)-l3*sin(q1+q2+q3)*(dq1+dq2+dq3) -l2*sin(q1+q2)*(dq1+dq2)-l3*sin(q1+q2+q3)*(dq1+dq2+dq3) -l3*sin(q1+q2+q3)*(dq1+dq2+dq3)];
 

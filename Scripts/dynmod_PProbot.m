@@ -91,15 +91,16 @@ pause
 
 disp('*potential energy of link 1*')
 
+%% vector gravity acceleration
+g=[0;-g0;0];
+
 %% compute the potential energy of link 1
-U1=0
+U1=-m1*g*q1;
 
 pause
 
 disp('*potential energy of link 2*')
 
-%% vector gravity acceleration
-g=[0;-g0;0];
 
 %% compute the potential energy of link 2
 U2=0
