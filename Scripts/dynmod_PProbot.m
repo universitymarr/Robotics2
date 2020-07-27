@@ -6,7 +6,7 @@ close all
 clc
 
 %% define symbolic variables
-syms m1 m2 d I2xx I2yy I2zz real  %symbolic variables explicitly defined as real
+syms m1 m2 d2 I2xx I2yy I2zz real  %symbolic variables explicitly defined as real
 syms q1 q2 dq1 dq2 ddq1 ddq2 u1 u2 g0 real
 
 disp('**** dynamic model of PP planar robot in a vertical plane ****')
@@ -26,7 +26,7 @@ pause
 disp('*kinetic energy of link 2')
 
 %% compute the kinetic energy of joint 2
-pc2=[q1 q2 0]';
+pc2=[q1+q2*cos(deg2rad(120)) q2*sin(deg2rad(120)) 0]';
 vc2=diff(pc2,q1)*dq1+diff(pc2,q2)*dq2;
 
 T2= (1/2)*m2*vc2'*vc2
@@ -95,7 +95,7 @@ disp('*potential energy of link 1*')
 g=[0;-g0;0];
 
 %% compute the potential energy of link 1
-U1=-m1*g*q1;
+U1=-m1*g'*[q1;0;0];
 
 pause
 
@@ -103,7 +103,7 @@ disp('*potential energy of link 2*')
 
 
 %% compute the potential energy of link 2
-U2=0
+U2=-m2*g'*pc2;
 pause
 
 disp('***robot potential energy (due to gravity)***')
@@ -116,7 +116,7 @@ pause
 disp('***robot gravity term***')
 
 %% compute G
-G=jacobian(U,q)'
+G=jacobian(U,q)
 
 pause
 

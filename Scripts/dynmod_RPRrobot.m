@@ -1,3 +1,4 @@
+
 %% dynamic model of RPR planar robot under gravity
 %% using a Lagrangian formulation in symbolic form
 
@@ -27,7 +28,7 @@ disp(' ')
 disp('*kinetic energy of link 1*')
 
 %% compute linear part of kinetic energy of joint 1
-pc1=[d1*cos(q1); d1*sin(q1);0]
+pc1=[0; 0;0]
 vc1=diff(pc1,q1)*dq1;
 Tl1=simplify((1/2)*m1*vc1'*vc1);
 
@@ -41,7 +42,7 @@ pause
 disp('*kinetic energy of link 2*')
 
 %% compute linear part kinetic energy of joint 2
-pc2 = [L1*cos(q1)-(q2-d2)*sin(q1) L1*sin(q1)+(q2-d2)*cos(q1) 0]';
+pc2 = [(q2-d2)*cos(q1) (q2-d2)*sin(q1) 0]';
 vc2 = diff(pc2,q1)*dq1+diff(pc2,q2)*dq2;
 Tl2 = (1/2)*m2*vc2'*vc2;
 
@@ -52,15 +53,16 @@ Ta2=(1/2)*om2'*diag([I2xx I2yy I2zz])*om2;
 T2 = simplify(Tl2+Ta2)
 pause
 
+
 disp('*kinetic energy of link 3*')
 
 %% compute linear part kinetic energy of joint 3
-pc3 = [L1*cos(q1)-q2*sin(q1)-d3*sin(q1+q3); L1*sin(q1)+q2*cos(q1)+d3*cos(q1+q3);0];
+pc3 = [q2*cos(q1)+(L3-d3)*cos(q3); q2*sin(q1)+(L3-d3)*sin(q3);0];
 vc3 = diff(pc3,q1)*dq1 + diff(pc3,q2)*dq2 + diff(pc3,q3)*dq3;
 Tl3 = (1/2)*m3*vc3'*vc3;
 
 %% compute  kinetic energy of joint 2
-om3 = [0 0 dq1+dq3]';
+om3 = [0 0 dq3+dq1]';
 Ta3=(1/2)*om3'*diag([I3xx I3yy I3zz])*om3;
 
 T3 = simplify(Tl3+Ta3)
@@ -92,12 +94,22 @@ M(2,3)=diff(TempB23,dq3);
 M(3,2)=M(2,3);
 
 M=simplify(M)
+pause
+%% parametrization
+syms a1 a2 a3 a4 a5 a6 real
 
+% M=[a1+a2*q2^2-2*a5*q2-2*a4*L1*sin(q3)+2*a4*cos(q3)*q2 a2*L1-a4*sin(q3) a3-a4*L1*sin(q3)+a4*cos(q3)*q2;
+%    a2*L1-a4*sin(q3) a2 -a4*sin(q3);
+%    a3-a4*L1*sin(q3)+a4*cos(q3)*q2 -a4*sin(q3) a3]
+
+M=[a1+a2*q2^2-2*a5*q2+2*a4*q2*cos(q3) -a4*sin(q3) a3+a4*q2*cos(q3);
+   -a4*sin(q3) a2 -a4*sin(q3);
+   a3+a4*q2*cos(q3) -a4*sin(q3) a3;]
 
 %% compute the Christoffel Matrix
 q=[q1;q2;q3];
 
-M1=M(:,1);
+M1=M(:,1);  
 C1=(1/2)*(jacobian(M1,q)+jacobian(M1,q)'-diff(M,q1))
 M2=M(:,2);
 C2=(1/2)*(jacobian(M2,q)+jacobian(M2,q)'-diff(M,q2))
@@ -112,14 +124,14 @@ dq=[dq1;dq2;dq3];
 c1=dq'*C1*dq;
 c2=dq'*C2*dq;
 c3=dq'*C3*dq;
-c=[c1;c2;c3]
+c=simplify([c1;c2;c3])
 
 pause 
 
 disp('*potential energy of link 1*')
 
 %% vector gravity acceleration
-g=[0;-g0;0];
+g=[g0;0;0];
 
 %% compute the potential energy of link 1
 U1=-m1*g'*pc1;

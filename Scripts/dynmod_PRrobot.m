@@ -9,7 +9,7 @@ close all
 clc
 
 %% define symbolic variables
-syms m1 m2 d I2xx I2yy I2zz real  %symbolic variables explicitly defined as real
+syms m1 m2 d2 I2xx I2yy I2zz real  %symbolic variables explicitly defined as real
 syms q1 q2 dq1 dq2 ddq1 ddq2 u1 u2 g0 real
 
 disp('**** dynamic model of PR planar robot in a vertical plane ****')
@@ -29,9 +29,9 @@ pause
 disp('*kinetic energy of link 2 - linear part*')
 
 %% compute the linear part of kinetic energy of joint 2
-pc2=[q1+d*cos(q2) d*sin(q2) 0]'
+pc2=[q1+d2*cos(q2) d2*sin(q2) 0]'
 vc2=diff(pc2,q1)*dq1+diff(pc2,q2)*dq2
-T2c= (1/2)*m2*vc2'*vc2
+T2c= (1/2)*m2*vc2'*vc2;
 
 pause
 
@@ -39,10 +39,10 @@ disp('*kinetic energy of link 2 - angular part*')
 
 %% compute the angular part of kinetic energy of joint 2
 om2=[0 0 dq2]'
-T2a=(1/2)*om2'*diag([I2xx I2yy I2zz])*om2
+T2a=(1/2)*om2'*diag([I2xx I2yy I2zz])*om2;
 
 %% kinetic energy of joint 2
-T2=T2c+T2a;
+T2=T2c+T2a
 pause
 
 disp('***robot kinetic energy***')

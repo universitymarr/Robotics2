@@ -1,3 +1,4 @@
+
 %% dynamic model of PRP planar robot under gravity
 %% using a Lagrangian formulation in symbolic form
 
@@ -7,8 +8,8 @@ clc
 
 %% define symbolic variables
 syms m1 m2 m3 real
-syms dc1 dc2 dc3 real
-syms l1 l2 l3 real
+syms d1 d2 d3 real
+syms L1 L2 L3 real
 syms I2xx I2yy I2zz real
 syms I3xx I3yy I3zz real
 syms q1 q2 q3 real
@@ -26,15 +27,18 @@ disp(' ')
 disp('*kinetic energy of link 1*')
 
 %% compute kinetic energy of joint 1
-T1=(1/2)*m1*dq1^2
-
+%pc1 = [q1 0 0]';
+pc1=[0 q1 0]';
+vc1 = diff(pc1,q1)*dq1;
+T1=(1/2)*m1*vc1'*vc1
 pause
 
 disp('*kinetic energy of link 2 - linear part')
 
 %% compute the linear part of kinetic energy of joint 2
-pc2=[q1+dc2*cos(q2) dc2*sin(q2) 0]'
-vc2=diff(pc2,q1)*dq1+diff(pc2,q2)*dq2
+%pc2=[q1+d1+d2*cos(q2) d2*sin(q2) 0]';
+pc2=[d2*cos(q2) q1+d1+d2*sin(q2) 0]'
+vc2=simplify(diff(pc2,q1)*dq1+diff(pc2,q2)*dq2);
 Tl2= simplify((1/2)*m2*vc2'*vc2);
 
 disp('*kinetic energy of link 2 - angular part*')
@@ -48,9 +52,9 @@ pause
 disp('*kinetic energy of link 3*')
 
 %% compute the linear part of kinetic energy of joint 3
-pc3 = [q1+q3*cos(q2) q3*sin(q2) 0]';
-vc3=diff(pc3,q1)*dq1+diff(pc3,q2)*dq2+diff(pc3,q3)*dq3;
-
+pc3 = [q3*cos(q2+pi/2)+L2*cos(q2) q1+d1+L2*sin(q2)+q3*sin(q2+pi/2) 0]';
+vc3=simplify(diff(pc3,q1)*dq1+diff(pc3,q2)*dq2+diff(pc3,q3)*dq3);
+%vc3 = [dq1; dq2*(q3-d3); dq3]
 Tl3 = simplify(1/2*m3*vc3'*vc3);
 
 %% compute the angular part of kinetic energy of joint 3
@@ -69,7 +73,6 @@ disp('*simplifying*')
 
 T=simplify(T1+T2+T3)
 pause
-
 % collect in base of term that you pass it in this case, collect terms that has dq1^2 and 
 % do the same for dq2^2 because you need them to compute M
 T=collect(T,dq1^2);
@@ -101,6 +104,14 @@ M(3,2)=M(2,3);
 M=simplify(M)
 
 pause
+
+%% parametrization
+syms a1 a2 a3 a4 a5 real
+
+M=[a1 a4*cos(q2)-a3*q3*sin(q2) a3*cos(q2);
+    a4*cos(
+q2)-a3*q3*sin(q2) a2+a3*q3^2 a3*L2;
+   a3*cos(q2) a3*L2 a3;]
 
 disp('*Christoffel matrices*')
 
@@ -142,21 +153,22 @@ disp('*potential energy of link 2*')
 g=[0;-g0;0];
 
 %% compute the potential energy of link 2
-U2=0
+U2=-m2*g'*pc2;
 
-pause
+%% compute the potential energy of link 3
+U3=-m3*g'*pc3;
 
 disp('***robot potential energy (due to gravity)***')
 
 %%  total potential energy
-U=U1+U2
+U=U1+U2+U3
 
 pause
 
 disp('***robot gravity term***')
 
 %% compute G
-G= 0 %jacobian(U,q)'
+G= jacobian(U,q)'
 
 pause
 

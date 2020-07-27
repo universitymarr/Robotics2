@@ -7,8 +7,8 @@ clc
 
 %% define symbolic variables
 syms m1 m2 real
-syms dc1 dc2 dc3 real
-syms l1 l2 l3 real
+syms d1 d2 d3 real
+syms L1 L2 L3 real
 syms I1xx I1yy I1zz real  %symbolic variables explicitly defined as real
 syms I2xx I2yy I2zz real  %symbolic variables explicitly defined as real
 syms q1 q2 real
@@ -25,31 +25,30 @@ pause
 disp(' ')
 disp('*kinetic energy of link 1*')
 %% compute linear part of linear kinetic energy of joint 1
-% pc1 = [cos(q1); sin(q1);0];
-% vc1=diff(pc1,q1)*dq1;
-% Tl1 = 1/2*m1*vc1'*vc1;
-Tl1=0
+pc1 = [0;0;0];
+vc1=diff(pc1,q1)*dq1;
+Tl1 = simplify(1/2*m1*vc1'*vc1);
 
 
 %% compute angular part of linear kinetic energy of joint 1
 om1 = [0 0 dq1]';
-Ta1 = 1/2*om1'*diag([I1xx I1yy I1zz])*om1;
+Ta1 = simplify(1/2*om1'*diag([I1xx I1yy I1zz])*om1);
 
-T1 = Tl1+Ta1
+T1 = simplify(Tl1+Ta1)
 pause
 
 disp('*kinetic energy of link 2')
 
 %% compute the linear part of kinetic energy of joint 2
-pc2=[q2*cos(q1); q2*sin(q1); 0];
+pc2=[(q2-d2)*sin(q1) (q2-d2)*cos(q1) 0]';
 vc2=diff(pc2,q1)*dq1+diff(pc2,q2)*dq2;
-Tl2= (1/2)*m2*vc2'*vc2;
+Tl2= simplify((1/2)*m2*vc2'*vc2);
 
 %% compute the angular part of kinetic energy of joint 2
 om2 = [0 0 dq1]';
-Ta2 = 1/2*om2'*diag([I2xx I2yy I2zz])*om2;
+Ta2 = simplify(1/2*om2'*diag([I2xx I2yy I2zz])*om2);
 
-T2=simplify(Tl2+Ta2)
+T2= simplify(Tl2+Ta2)
 pause
 
 disp('***robot kinetic energy***')
@@ -59,14 +58,13 @@ T=T1+T2;
 
 disp('*simplifying*')
 
-T=simplify(T1+T2)
-pause
+T=simplify(T1+T2);
 
 % collect in base of term that you pass it in this case, collect terms that has dq1^2 and 
 % do the same for dq2^2 because you need them to compute M
 T=collect(T,dq1^2);
-T=collect(T,dq2^2);
-
+T=collect(T,dq2^2)
+pause
 disp('***robot inertia matrix***')
 
 %% compute robot matrix M, inertia matrix
@@ -84,6 +82,12 @@ M(2,1)=M(1,2);
 M=simplify(M)
 
 pause
+
+%% parametrization 
+syms a1 a2 a3 a4 real
+
+% M=[a1+a2*q2^2-2*a3*q2 0;
+%     0 a2]
 
 disp('*Christoffel matrices*')
 
@@ -112,17 +116,17 @@ disp('*potential energy of link 1*')
 
 %% vector gravity acceleration
 syms alpha real
-g=[0;-g0*sin(alpha);0];
+g=[0;g0;0];
 
 %% compute the potential energy of link 1
-U1=0
+U1=-m1*g'*pc1;
 
 pause
 
 disp('*potential energy of link 2*')
 
 %% compute the potential energy of link 2
-U2=-m2*g*q2*sin(q1)
+U2=-m2*g'*pc2
 
 pause
 
@@ -143,7 +147,7 @@ pause
 disp('***complete dynamic equations***')
 
 %% show complete dynamic equations
-M*[ddq1; ddq2]+c+G(:,2)==[u1 u2]'
+M*[ddq1; ddq2]+c+G==[u1 u2]'
 
 disp('***end***')
 

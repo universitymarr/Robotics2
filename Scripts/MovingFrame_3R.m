@@ -10,7 +10,7 @@ syms m1 m2 m3 d
 syms I1xx I1yy I1zz real
 syms I2xx I2yy I2zz real
 syms I3xx I3yy I3zz real
-syms d1 d2 l1 l2 l3 real
+syms d1 d2 L1 L2 L3 real
 syms q1 q2 q3 real
 syms dq1 dq2 dq3 real
 syms ddq1 ddq2 ddq3 real
@@ -48,10 +48,11 @@ rc2 = [-C;0;0];
 rc3 = [-D;0;E];
 
 %% positions of link
- pc1 = [0;l1;0];
- pc2 = [l2;0;0];
- pc3 = [l3;0;0];
+pc1 = R1'*[0 0 L1]'
+pc2 = simplify(R2'*[L2*cos(q2) L2*sin(q2) 0]')
+pc3 = simplify(R3'*[L3*cos(q3) L3*sin(q3) 0]')
  
+pause
 disp('*START RECURSION OF ALGORITHM*')
 disp(' ')
 

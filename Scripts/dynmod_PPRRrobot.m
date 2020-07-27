@@ -7,8 +7,8 @@ clc
 
 %% define symbolic variables
 syms m1 m2 m3 m4 real
-syms dc1 dc2 dc3 dc4 real
-syms l1 l2 l3 l4 real
+syms d1 d2 d3 d4 real
+syms L1 L2 L3 L4 real
 syms I1xx I1yy I1zz real  %symbolic variables explicitly defined as real
 syms I2xx I2yy I2zz real  %symbolic variables explicitly defined as real
 syms I3xx I3yy I3zz real  %symbolic variables explicitly defined as real
@@ -28,24 +28,24 @@ disp(' ')
 disp('*kinetic energy of link 1*')
 
 %% compute kinetic energy of joint 1
-pc1 = [q1; 0;0];
+pc1 = [-(d1-q1); 0;0];
 vc1=diff(pc1,q1)*dq1;
-T1 = 1/2*m1*vc1'*vc1;
-
+T1 = 1/2*m1*vc1'*vc1
+pause
 disp('*kinetic energy of link 2')
 
 %% compute  kinetic energy of joint 2
-pc2 = [q1; q2;0];
+pc2 = [q1; q2-d2;0];
 vc2=diff(pc2,q1)*dq1+diff(pc2,q2)*dq2;
-T2 = 1/2*m2*vc2'*vc2;
+T2 = 1/2*m2*vc2'*vc2
+pause
 
 disp('*kinetic energy of link 3')
 
 %% compute linear part of linear kinetic energy of joint 3
-pc3 = [q1+dc3*cos(q3); q2+dc3*sin(q3);0];
+pc3 = [q1+d3*cos(q3); q2+d3*sin(q3);0];
 vc3=diff(pc3,q1)*dq1+diff(pc3,q2)*dq2++diff(pc3,q3)*dq3;
 Tl3 = 1/2*m3*vc3'*vc3;
-pause
 
 
 %% compute the angular part of kinetic energy of joint 3
@@ -57,7 +57,7 @@ pause
 disp('*kinetic energy of link 4')
 
 %% compute linear part of linear kinetic energy of joint 4
-pc4 = [q1+l3*cos(q3)+dc4*cos(q4+q3); q2+l3*sin(q3)+dc4*sin(q4+q3);0];
+pc4 = [q1+L3*cos(q3)+d4*cos(q4+q3); q2+L3*sin(q3)+d4*sin(q4+q3);0];
 vc4=diff(pc4,q1)*dq1+diff(pc4,q2)*dq2+diff(pc4,q3)*dq3+diff(pc4,q4)*dq4;
 Tl4 = 1/2*m4*vc4'*vc4;
 
@@ -65,7 +65,7 @@ Tl4 = 1/2*m4*vc4'*vc4;
 om4 = [0 0 dq4+dq3]';
 Ta4 = 1/2*om4'*diag([I4xx I4yy I4zz])*om4;
 
-T4= simplify(Tl4+Ta4);
+T4= simplify(Tl4+Ta4)
 pause
 
 T=simplify(T1+T2+T3+T4)
@@ -106,33 +106,17 @@ M(3,4)=diff(TempB3,dq4);
 M(4,3)=M(3,4);
 
 M=simplify(M)
-
+pause
 disp('*parametrized*')
 
 %% M in parametrized form
 
-syms a1 a2 a3 a4 a5 a6 real
-Mp(1,1) = a1;
-Mp(2,2) = a2;
-Mp(3,3) = a3+2*a5*l3*cos(q4);
-Mp(4,4) = a4;
+syms a1 a2 a3 a4 a5 a6 a7 real
 
-Mp(1,2) = 0;
-Mp(2,1) = 0;
-Mp(1,3) = -a6*sin(q3)-a5*sin(q4+q3);
-Mp(3,1) = Mp(1,3);
-Mp(1,4) = -a5*sin(q3+q4);
-Mp(4,1) = Mp(1,4);
-
-Mp(2,3) = a6*cos(q3)+a5*cos(q3+q4);
-Mp(3,2) = Mp(2,3);
-Mp(2,4) = a5*cos(q3+q4);
-Mp(4,2) = Mp(2,4);
-
-Mp(3,4) = a4+a5*l3*cos(q4);
-Mp(4,3) = Mp(3,4);
-
-Mp=simplify(Mp)
+M=[a1 0 -a6*sin(q3+q4)-a5*sin(q3) -a6*sin(q3+q4);
+    0 a2 a6*cos(q3+q4)+a5*cos(q3) a6*cos(q3+q4);
+    -a6*sin(q3+q4)-a5*sin(q3) a6*cos(q3+q4)+a5*cos(q3) a3+2*a6*L3*cos(q4) a4+a6*L3*cos(q4);
+    -a6*sin(q3+q4) a6*cos(q3+q4) a4+a6*L3*cos(q4) a4;]
 
 disp('*Christoffel matrices*')
 
@@ -141,20 +125,20 @@ disp('*Christoffel matrices*')
 q=[q1;q2;q3;q4];
 
 
-M1p=Mp(:,1);
-C1=(1/2)*(jacobian(M1p,q)+jacobian(M1p,q)'-diff(Mp,q1))
+M1=M(:,1);
+C1=(1/2)*(jacobian(M1,q)+jacobian(M1,q)'-diff(M,q1))
 pause
 
-M2p=Mp(:,2);
-C2=(1/2)*(jacobian(M2p,q)+jacobian(M2p,q)'-diff(Mp,q2))
+M2=M(:,2);
+C2=(1/2)*(jacobian(M2,q)+jacobian(M2,q)'-diff(M,q2))
 pause
 
-M3p=Mp(:,3);
-C3=(1/2)*(jacobian(M3p,q)+jacobian(M3p,q)'-diff(Mp,q3))
+M3=M(:,3);
+C3=(1/2)*(jacobian(M3,q)+jacobian(M3,q)'-diff(M,q3))
 pause
 
-M4p=Mp(:,4);
-C4=(1/2)*(jacobian(M4p,q)+jacobian(M4p,q)'-diff(Mp,q4))
+M4=M(:,4);
+C4=(1/2)*(jacobian(M4,q)+jacobian(M4,q)'-diff(M,q4))
 pause
 
 disp('***robot centrifugal terms (no Coriolis here!)***')
@@ -168,44 +152,44 @@ c=[c1;c2;c3;c4]
 pause
 
 disp('*potential energy of link 1*')
-
-%% compute the potential energy of link 1
-U1=0;
-
-disp('*potential energy of link 2*')
-
 %% vector gravity acceleration
 g=[0;-g0;0];
 
+%% compute the potential energy of link 1
+U1=-m1*g'*pc1;
+
+disp('*potential energy of link 2*')
+
+
 %% compute the potential energy of link 2
-U2=-m2*g*q2;
+U2=-m2*g'*pc2;
 
 disp('*potential energy of link 3*')
 %% compute the potential energy of link 3
-U3=-m3*g*(q2+dc3*sin(q3));
+U3=-m3*g'*pc3;
 
 disp('*potential energy of link 4*')
 
 %% compute the potential energy of link 4
-U4=-m4*g*(q2+l3*sin(q3)+dc4*sin(q3+q4));
+U4=-m4*g'*pc4;
 
 U=simplify(U1+U2+U3+U4)
 pause
 
 disp('***robot gravity term***')
 
-G=jacobian(U,q)';
-G=G(:,2);
+G=jacobian(U,q)'
+pause
 
-Gp = [0; a2*g0; g0*(a6*cos(q3)+a5*cos(q3+q4)); a5*g0]
+%Gp = [0; a2*g0; g0*(a6*cos(q3)+a5*cos(q3+q4)); a5*g0]
 
 
 disp('***complete dynamic equations***')
 
 %% show complete dynamic equations
-Mp*[ddq1; ddq2; ddq3; ddq4]+c+Gp==[u1 u2 u3 u4]'
+M*[ddq1; ddq2; ddq3; ddq4]+c+G==[u1 u2 u3 u4]'
 
-ris = collect(Mp*[ddq1; ddq2; ddq3; ddq4]+c+Gp,a1);
+ris = collect(M*[ddq1; ddq2; ddq3; ddq4]+c+G,a1);
 ris = collect(ris,a2);
 ris = collect(ris,a3);
 ris = collect(ris,a4);

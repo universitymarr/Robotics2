@@ -1,16 +1,21 @@
 clear all
 %% Define symbolic variables
-syms alpha a d theta
+syms alpha a d C D E F theta
 syms q1 q2 q3 q4 q5 q6 real
-syms  d1 a2 a3 d4 L1 L2 L3 real
+syms  d1 d2 d3 a2 a3 d4 L1 L2 L3 L4 r2 real
 
 %% number of joints
-N=3;
+N=6;
 
 %% Insert DH table of parameters of SCARA
+
+%% ALPHA A D THETA
 DHTABLE = [-pi/2 0 L1 q1;
-           pi/2 0 q2 pi/2;
-           0 L3 0 q3]
+           0 L2 0 q2;
+           0 L3 0 q3;
+           -pi/2 0 0 q4;
+           0 L4 0 q5;
+           0 0 0 q6]
     
 %% Build the general Denavit-Hartenberg trasformation matrix
 TDH = [cos(theta) -sin(theta)*cos(alpha)  sin(theta)*sin(alpha) a*cos(theta);
