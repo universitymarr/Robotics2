@@ -13,7 +13,7 @@
 | Author |  Last Update | 
 |--------| ------------ | 
 | [Sveva Pepe](https://github.com/pepes97) | 2020 | 
-| Francesco Scotti | 2020 |
+| [Francesco Scotti](https://github.com/FrancescoScotti) | 2020 |
 
 
 ### Requirements
