@@ -2,7 +2,7 @@
 
 |   | Available | Last Update |
 | ------------- | ------------- | ------------ |
-| Exams | Yes | 2020 |
+| Exams | Yes | 2021 |
 | Homework  | No  | |
 | Notes | No | |
 | Scripts  Matlab| Yes  | 2020|
