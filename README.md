@@ -1,4 +1,4 @@
-# Robotics 2 - Sapienza University Rome
+# Robotics 2
 
 |   | Available | Last Update |
 | ------------- | ------------- | ------------ |
