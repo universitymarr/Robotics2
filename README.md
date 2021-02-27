@@ -5,8 +5,14 @@
 | Exams | Yes | 2021 |
 | Homework  | No  | |
 | Notes | No | |
-| Scripts  Matlab| Yes  | 2020|
+| Scripts  Matlab | Yes  | 2020|
 | Slides | Yes | 2020 |
+
+## Website of the course
+
+| Course Site |  Last Update | 
+|--------| ------------ |
+| [http://www.diag.uniroma1.it/~deluca/rob2_en/material_rob2_en.html](http://www.diag.uniroma1.it/~deluca/rob2_en/material_rob2_en.html) | 2021|
 
 ## Scripts 
 
