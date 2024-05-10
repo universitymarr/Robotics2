@@ -20,6 +20,7 @@
 | ------------------------------------------------------ | ----------- |
 | [Sveva Pepe](https://github.com/pepes97)               | 2020        |
 | [Francesco Scotti](https://github.com/FrancescoScotti) | 2020        |
+| [Flavio Maiorana](https://github.com/neverorfrog)      | 2024        |
 
 > **NOTE:** Several scripts useful for Robotics2, such as SNS implementation, are available in Robotics1 repository inside Scripts_v2 folder.
 
