@@ -2,10 +2,10 @@
 
 |                 | Available | Last Update |
 | --------------- | --------- | ----------- |
-| Exams           | Yes       | 2021        |
+| Exams           | Yes       | 2024        |
 | Homework        | No        | -           |
 | Notes           | Yes       | 2021        |
-| Scripts  Matlab | Yes       | 2020        |
+| Scripts  Matlab | Yes       | 2024        |
 | Slides          | Yes       | 2020        |
 
 ## Website of the course
